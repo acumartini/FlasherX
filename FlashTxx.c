@@ -60,7 +60,7 @@ int firmware_buffer_init( uint32_t *buffer_addr, uint32_t *buffer_size )
 //******************************************************************************
 // compute addr for firmware buffer using a fixed buffer_size and return NO/RAM/FLASH_BUFFER_TYPE
 //******************************************************************************
-uint32_t firmware_buffer_init( uint32_t *buffer_addr, uint32_t target_buffer_size )
+uint32_t firmware_buffer_init_fixed( uint32_t *buffer_addr, uint32_t target_buffer_size )
 {
   #if defined(__MK66FX1M0__)     // for T3.6 only
   LMEM_EnableCodeCache( false ); // disable LMEM code cache for flash operations
