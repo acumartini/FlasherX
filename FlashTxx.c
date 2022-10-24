@@ -58,6 +58,24 @@ int firmware_buffer_init( uint32_t *buffer_addr, uint32_t *buffer_size )
 }
 
 //******************************************************************************
+// compute addr for firmware buffer using a fixed buffer_size and return NO/RAM/FLASH_BUFFER_TYPE
+//******************************************************************************
+uint32_t firmware_buffer_init( uint32_t *buffer_addr, uint32_t target_buffer_size )
+{
+  #if defined(__MK66FX1M0__)     // for T3.6 only
+  LMEM_EnableCodeCache( false ); // disable LMEM code cache for flash operations
+  #endif
+
+  // start at bottom of FLASH_RESERVE and subtract the buffer
+  *buffer_addr = FLASH_BASE_ADDR + FLASH_SIZE - FLASH_RESERVE - 4 - target_buffer_size;
+
+  // increase buffer_addr to next sector boundary (if not on a sector boundary)
+  if ((*buffer_addr % FLASH_SECTOR_SIZE) > 0)
+    *buffer_addr += FLASH_SECTOR_SIZE - (*buffer_addr % FLASH_SECTOR_SIZE);
+  return FLASH_BASE_ADDR - *buffer_addr + FLASH_SIZE - FLASH_RESERVE;
+}
+
+//******************************************************************************
 // compute addr/size for firmware buffer and return NO/RAM/FLASH_BUFFER_TYPE
 //******************************************************************************
 void firmware_buffer_free( uint32_t buffer_addr, uint32_t buffer_size )
